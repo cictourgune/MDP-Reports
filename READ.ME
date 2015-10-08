@@ -1,0 +1,54 @@
+*****************
+** DESCRIPCIÓN **
+*****************
+Proyecto encargado de generar informes diarios y mandarlos por correo para analizar el rendimiento del CRAWLER.
+Genera los siguientes informes (en base a los param de entrada):
+	
+	1. SUMMARY: Tabla resumen que ofrece cantidad de registros generados en la fecha actual. Agregados por países 
+	saca registros correctos, fallidos, número de alojamientos actuales, HDE no disponibles y el total de registros.
+	Así mismo genera la cantida de registros agregados en el StagingArea en el día anterior al actual (esto es porque
+	dicha agregación se realiza a las 23'30 y este resumen se lanza a la madrugada del día siguiente).
+	
+	2.  GEO: Tabla resumen con los datos de los alojamientos que no disponen de GEO validos. Es recomendable previamente
+	lanzar el proceso "mdp-geofix" para intentar resolver el máximo numero posible de inconsistencias. Actualmente
+	(05/12/2014) para el caso de España se verifican que las localidades sean válidas, mientras que en el resto de
+	países, sólo se comprueba si tienen TODOS los campos "gm_country, gm_aal1, gm_aal2, gm_aal3, gm_aal4, gm_locality" VACÍOS.
+	
+	3. CATEGORIES: Tabla resumen con los alojamientos cuya categoría es -1. Dicho valor es el que por defecto se establece
+	durante el proceso de crawling, pero que se espera se modifque por el mismo al encontrar la categoría. 
+	Cuando el selector falla o ha habido algún problema se quedará a -1 por lo que hay que revisar manualmente. Sobre todo 
+	desde el momento en que la categoría de un hotel es un elemento de filtrado indispensable para el posterior análisis de los datos.
+	
+	4. RATINGS: Tabla resumen con la cantidad de registros almacenados en la tabla de RATINGS. Los datos salen agregados
+	por país.
+	
+	5. REVIEWS: Tabla resumen con la cantidad de registros almacenados en la tabla de REVIEWS. Los datos salen agregados
+	por país.
+	 
+
+***********************
+** EXPORTACIÓN (jar) **
+***********************
+(Desde Eclipse)
+
+1. Click derecho en el proyecto, "Export"
+2. Elegir "Runnable JAR File"
+3. Arriba elegir un "Launch Configuration" válido (previamente se ha tenido que crear uno para haber testado la aplicación)
+4. Seleccionar nombre del jar y directorio donde se generará
+
+*******************
+** CONFIGURACIÓN **
+*******************
+Fichero "properties/config.properties"
+
+
+***************
+** EJECUCIÓN **
+***************
+1. En el mismo directorio donde se aloja el fichero JAR, crear una carpeta denominada "properties" y albergar en ella 
+el fichero "config.properties" que se encuentra en el workspace en la carpeta del misno nombre.
+
+2. Llamada base: java -jar fichero.jar + params
+		2.1. param 1: new/old (dependiendo el entorno de la base de datos). OJO modificar el fichero "config.properties" según convenga.
+		2.2. param 2: summary/geo/categories/ratings/reviews
+		
